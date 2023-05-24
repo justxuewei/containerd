@@ -112,6 +112,7 @@ func (c *criService) RunPodSandbox(ctx context.Context, r *runtime.RunPodSandbox
 	}
 
 	ociRuntime, err := c.getSandboxRuntime(config, r.GetRuntimeHandler())
+	log.G(ctx).Debugf("xuewei 0: runtime handler = %s, ociRuntime = %v", r.GetRuntimeHandler(), ociRuntime)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get sandbox runtime: %w", err)
 	}
@@ -317,7 +318,7 @@ func (c *criService) RunPodSandbox(ctx context.Context, r *runtime.RunPodSandbox
 		// network states such as IP.
 		// In future runtime implementation should avoid relying on CRI shim implementation details.
 		// In this case however caching the IP will add a subtle performance enhancement by avoiding
-		// calls to network namespace of the pod to query the IP of the veth interface on every
+			// calls to network namespace of the pod to query the IP of the veth interface on every
 		// SandboxStatus request.
 		if err := c.setupPodNetwork(ctx, &sandbox); err != nil {
 			return nil, fmt.Errorf("failed to setup network for sandbox %q: %w", id, err)
@@ -417,6 +418,10 @@ func (c *criService) getNetworkPlugin(runtimeClass string) cni.CNI {
 		return nil
 	}
 	i, ok := c.netPlugin[runtimeClass]
+	log.
+		G(context.Background()).
+		Debugf("xuewei 1: c.netPlugin = %+v, runtimeClass = %s, defaultNetworkPlugin = %s, i = %+v", 
+			c.netPlugin, runtimeClass, defaultNetworkPlugin, i)
 	if !ok {
 		if i, ok = c.netPlugin[defaultNetworkPlugin]; !ok {
 			return nil

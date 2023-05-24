@@ -53,6 +53,7 @@ func (c *criService) initPlatform() (err error) {
 	pluginDirs := map[string]string{
 		defaultNetworkPlugin: c.config.NetworkPluginConfDir,
 	}
+	logrus.Debugf("xuewei 2: pluginDirs = %+v", pluginDirs)
 	for name, conf := range c.config.Runtimes {
 		if conf.NetworkPluginConfDir != "" {
 			pluginDirs[name] = conf.NetworkPluginConfDir
